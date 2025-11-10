@@ -1,0 +1,21 @@
+'use client';
+import { useEffect } from 'react';
+import { getAuth, onAuthStateChanged, signInAnonymously } from 'firebase/auth';
+
+// If you already export `auth` from your firebaseClient you can import it,
+// but using getAuth() here is fine too.
+export default function UseAnonAuth() {
+  useEffect(() => {
+    const a = getAuth();
+    const unsub = onAuthStateChanged(a, (u) => {
+      if (!u) {
+        signInAnonymously(a).catch((e) => {
+          console.error('Anon sign-in failed:', e);
+        });
+      }
+    });
+    return () => unsub();
+  }, []);
+
+  return null; // renders nothing
+}
